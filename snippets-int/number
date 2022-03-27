@@ -1,8 +1,11 @@
 typedef struct FInt{
-    int64_t val;
-    int8_t res;
+    int val;
+    int res;
 
     int get_acc(){
-        return val >> (64-8-res);
+        return val >> res;
+    }
+    int set_acc(v){
+        val = v << res;
     }
 } fint_t;

@@ -1,0 +1,15 @@
+//v is small value
+//vv is large value
+
+vv = v << 8;
+
+v_dt = vv & 0xFF;
+vv_l = vv >> 8;
+vv_h = (vv_l + 1);
+vv_h = vv_h & 0xFF;
+
+t_l = table[vv_l];
+t_h = table[vv_h];
+
+intp = ( (t_h-t_l) * vv_dt ) >> 8;
+spl = t_l + intp;

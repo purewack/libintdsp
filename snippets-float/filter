@@ -1,0 +1,7 @@
+float out;
+float in;
+float a;
+
+a = f / srate/2;
+
+out = out + a*(in-out);

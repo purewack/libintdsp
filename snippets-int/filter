@@ -1,5 +1,23 @@
-float out;
-float in;
-float a; //0->4095 = 0 -> fs/2 (12b)
+int out;
+int in;
+int h,h1 ... hN; //history for more poles
+int a; //0->4095 = 0 -> fs/2 (12b)
+int N = 12;
 
-out = out + (a*(in-out) >> 12);
+int = m = (1<<N)-1;
+a = a>m ? m : a; //limit a to current max resolution
+
+//single pole
+out = out + (a*(in-out) >> N);
+
+//multi pole
+h = h + (a*(in-h) >> N);
+h2 = h2 + (a*(h-h2) >> N);
+h3 = h3 + (a*(h3-h3) >> N);
+out = h3;
+
+//multi pole feedback
+ff =  (fb*(h-h1))>>N;
+h = h + (a*((in - h) + ff))>>N;
+h1 = h1 + (a*(h-h1))>>N;
+out = h1;

@@ -4,7 +4,10 @@
 #define VERBOSE
 #define LOGL(X) Serial.println(X)
 #define LOGNL(X) Serial.print(X)
-#include "../libintdsp/libintdsp.h"
+#include "libintdsp/libintdsp.h"
+#include "libintdsp/osc_t.h"
+#include "libintdsp/private/libintdsp.cpp"
+#include "libintdsp/private/nodes.cpp"
 
 int16_t spl_out_a,spl_out_b;
 agraph_t gg;
@@ -12,7 +15,7 @@ agraph_t gg;
 void setup() {
   Serial.begin(19200);
   
-  libintdsp_init(gg);
+  libintdsp_init(&gg);
 
   pinMode(D1,INPUT);
   pinMode(D2,INPUT);
@@ -22,16 +25,19 @@ void setup() {
     auto* os2_params = (osc_t*)os2->processor;
     os1_params->acc = 1800;
     os2_params->acc = 1200;
+    os1_params->gain = 20;
+    os2_params->gain = 20;
 
   auto* os3 = new_osc(&gg,"oscc");
     auto* os3_params = (osc_t*)os3->processor;
     os3_params->acc = 750;
+    os3_params->gain = 30;
     
   auto* lfo = new_osc(&gg,"lfo");
     auto* lfo_params = (osc_t*)lfo->processor;
     lfo_params->acc = 4;
     lfo_params->bias = 1500;
-    lfo_params->gain = 20;
+    lfo_params->gain = 5;
     lfo_params->table = sint;
 
   auto* dac = new_dac(&gg,"dac",&spl_out_a);

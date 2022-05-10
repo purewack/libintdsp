@@ -2,9 +2,13 @@
 
 #ifndef DEBUG
     #define LOGL(X) 
+    #define LOGNL(X)
 #else
     #ifndef LOGL
         #define LOGL(X) 
+    #endif
+    #ifndef LOGNL
+        #define LOGNL(X) 
     #endif
 #endif
 

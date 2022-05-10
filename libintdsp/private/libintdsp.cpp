@@ -17,7 +17,6 @@ void libintdsp_init(agraph_t* gg){
 }
 
 node_t* new_node(agraph_t* gg, char* sig){
-    //delay(2000);
     node_t* n = (node_t*)malloc(sizeof(node_t));
     n->deps_count = 0;
     n->sig = sig;
@@ -138,14 +137,22 @@ void recalc_graph(agraph_t* gg){
             int rem = 1;
             for(int j=0; j<sorted_count; j++){
                 node_t* s = sorted[j];
-                //Serial.println("%p (%s) %p (%s)\n",s,s->sig,n,n->sig);
+                #ifdef DEBUG
+                #ifdef VERBOSE
+                LOGL("%p (%s) %p (%s)\n",s,s->sig,n,n->sig);
+                #endif
+                #endif
                 if(n == s) rem = 0;
             }
                 
             if(rem) {
                 remain[remain_count] = n;
                 remain_count++;
-                //Serial.println("%p %s\n",n,n->sig);
+                #ifdef DEBUG
+                #ifdef VERBOSE
+                LOGL("%p %s\n",n,n->sig);
+                #endif
+                #endif
             }
         }
         
@@ -181,24 +188,27 @@ void recalc_graph(agraph_t* gg){
         free(gg->nodes);
     gg->nodes = sorted;
     
-    
-    // Serial.println("sorted nodes========\n");
-    // for(int i=0; i < gg->nodes_count; i++){
-    //     node_t* n = gg->nodes[i];
-    //     Serial.print(i);
-    //     Serial.print(" ");
-    //     Serial.println(n->sig);
+    #ifdef DEBUG
+    #ifdef VERBOSE
+    LOGL("sorted nodes========\n");
+    for(int i=0; i < gg->nodes_count; i++){
+        node_t* n = gg->nodes[i];
+        LOGNL(i);
+        LOGNL(" ");
+        LOGL(n->sig);
         
-    //     if(n->deps_count == 0) continue;
+        if(n->deps_count == 0) continue;
         
-    //     Serial.println("\tDeps:\n");
-    //     for(int j=0; j<n->deps_count;j++){
-    //         node_t* d = n->deps[j];
-    //         Serial.print("\t");
-    //         Serial.println(d->sig);
-    //     }
-    //     Serial.println("\n");
-    // }
+        LOGL("\tDeps:");
+        for(int j=0; j<n->deps_count;j++){
+            node_t* d = n->deps[j];
+            LOGNL("\t");
+            LOGNL(d->sig);
+        }
+        LOGL("");
+    }
+    #endif
+    #endif
 }
 
 

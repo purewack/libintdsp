@@ -1,7 +1,9 @@
 #include <I2S.h>
 
 #define DEBUG
+#define VERBOSE
 #define LOGL(X) Serial.println(X)
+#define LOGNL(X) Serial.print(X)
 #include "../libintdsp/libintdsp.h"
 
 int16_t spl_out_a,spl_out_b;

@@ -50,12 +50,15 @@ node_t* new_adr(agraph_t* gg, char* sig){
     b->processor = n;
     b->processor_func = proc_adr;
     n->io = b;
-    n->acc = 0;
+    n->v = 0;
     n->a_v = 1000;
     n->r_v = 1000;
+    n->state = 0;
+    n->old_state = 0;
     return b;
 }
-void proc_adr(adr_t* aa){
+void proc_adr(void* ad){
+  auto aa = (adr_t*)ad;
   if(aa->state && !aa->old_state)
     aa->a = aa->a_v;
   else if(!aa->state && aa->old_state)
@@ -69,10 +72,7 @@ void proc_adr(adr_t* aa){
   if(aa->vv > 1<<20) aa->vv = (1<<20) - 1;
   if(aa->vv < 0) aa->vv = 0;
   aa->v = aa->vv >> 8;
-  
-  aa->acc = (aa->spl * aa->v);
-  int x = aa->acc >> 12;
-  aa->io->out = (aa->io->in*x)>>8; 
+  aa->io->out = (aa->io->in*aa->v)>>12; 
 }
 
 void set_adr_attack_ms(adr_t* a, uint32_t ms, uint32_t srate){

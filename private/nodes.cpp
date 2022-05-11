@@ -40,32 +40,36 @@ node_t* new_osc(agraph_t* gg, char* sig){
 }
 
 
-// node_t* new_adr(agraph_t* gg, char* sig){
-//     node_t* b = new_node(gg,sig);
-//     adr_t* n = malloc(sizeof(adr_t));
-//     b->processor = n;
-//     b->processor_func = proc_adr;
-//     n->io = b;
-//     return b;
-// }
-// void proc_adr(adr_t* aa){
-//   if(aa->state && !aa->old_state)
-//     aa->a = aa->a_v;
-//   else if(!aa->state && aa->old_state)
-//     aa->a = -aa->r_v;
-//   if(aa->state != aa->old_state)
-//     aa->old_state = aa->state;
+node_t* new_adr(agraph_t* gg, char* sig){
+    node_t* b = new_node(gg,sig);
+    adr_t* n = (adr_t*)malloc(sizeof(adr_t));
+    b->processor = n;
+    b->processor_func = proc_adr;
+    n->io = b;
+    n->acc = 0;
+    n->a_v = 1000;
+    n->r_v = 1000;
+    return b;
+}
+void proc_adr(adr_t* aa){
+  if(aa->state && !aa->old_state)
+    aa->a = aa->a_v;
+  else if(!aa->state && aa->old_state)
+    aa->a = -aa->r_v;
+  if(aa->state != aa->old_state)
+    aa->old_state = aa->state;
   
-//   //if(aa->aa == 0) return;
+  //if(aa->aa == 0) return;
   
-//   aa->vv += aa->a;
-//   if(aa->vv > 1048576) aa->vv = 1048576;
-//   if(aa->vv < 0) aa->vv = 0;
-//   aa->v = aa->vv >> 8;
+  aa->vv += aa->a;
+  if(aa->vv > 1<<20) aa->vv = (1<<20) - 1;
+  if(aa->vv < 0) aa->vv = 0;
+  aa->v = aa->vv >> 8;
   
-//   aa->acc = (aa->spl * aa->v);
-//   aa->spl = aa->acc >> 12; 
-// }
+  aa->acc = (aa->spl * aa->v);
+  int x = aa->acc >> 12;
+  aa->io->out = (aa->io->in*x)>>8; 
+}
 
 // void proc_lpf(lpf_t* p){
 //   p->h = p->h + ((p->a * (p->spl-p->h))>>12);

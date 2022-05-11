@@ -1,5 +1,5 @@
 #pragma once
-#include "config.h"
+#include "private/config.h"
 #include "private/private.h"
 
 struct node_t;

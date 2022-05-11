@@ -38,7 +38,11 @@ node_t* new_osc(agraph_t* gg, char* sig){
     n->io = b;
     return b;
 }
-
+void set_osc_freq(osc_t* oo, uint32_t f_big, uint32_t srate){
+  //256 = fixed int resolution for multiplication
+  auto a = LUT_COUNT*256*f_big;
+  oo->acc = a / srate / 10;
+}
 
 node_t* new_adr(agraph_t* gg, char* sig){
     node_t* b = new_node(gg,sig);
@@ -69,6 +73,15 @@ void proc_adr(adr_t* aa){
   aa->acc = (aa->spl * aa->v);
   int x = aa->acc >> 12;
   aa->io->out = (aa->io->in*x)>>8; 
+}
+
+void set_adr_attack_ms(adr_t* a, uint32_t ms, uint32_t srate){
+  auto s = srate*ms / 1000;
+  a->a_v = (1<<20) / s; //16777216.f * 2.f/32000.f)
+}
+void set_adr_release_ms(adr_t* a, uint32_t ms, uint32_t srate){
+  auto s = srate*ms / 1000;
+  a->r_v = (1<<20) / s; //16777216.f * 2.f/32000.f)
 }
 
 // void proc_lpf(lpf_t* p){

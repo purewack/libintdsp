@@ -1,4 +1,0 @@
-
-vdt = val + floor(val)
-ipv = table[ceil(val) % table_size] - table[floor(val)]
-out = table[floor(val)] + (ipv * vdt)

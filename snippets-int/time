@@ -1,5 +1,0 @@
-int v; //value
-int time_spl; //time to take
-int v_end; //value to reach
-
-int step = //st = max / (time * fs)

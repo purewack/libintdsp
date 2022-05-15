@@ -1,9 +1,12 @@
+#pragma once 
 #include "libintdsp.h"
 
 struct lpf_t{
-  spl_t spl, 
-  int16_t h, h2, h3;
-  int16_t a;
+  node_t* io;
+  int32_t h, h2, h3;
+  int32_t a;
 };
 
-void proc_lpf(lpf_t* node);
+node_t* new_osc(agraph_t* graph, char* signature);
+void proc_lpf(void* node);
+void set_lpf_freq(lpf_t* processor, uint32_t f_0, uint32_t srate);

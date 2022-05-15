@@ -84,9 +84,25 @@ void set_adr_release_ms(adr_t* a, uint32_t ms, uint32_t srate){
   a->r_v = (1<<20) / s; //16777216.f * 2.f/32000.f)
 }
 
-// void proc_lpf(lpf_t* p){
-//   p->h = p->h + ((p->a * (p->spl-p->h))>>12);
-//   p->h2 = p->h2 + ((p->a * (p->h-p->h2))>>12);
-//   p->h3 = p->h3 + ((p->a * (p->h2-p->h3))>>12);
-//   p->spl = p->h3;
-// }
+node_t* new_lpf(agraph_t* gg, char* sig){
+    node_t* b = new_node(gg,sig);
+    lpf_t* n = (lpf_t*)malloc(sizeof(lpf_t));
+    b->processor = n;
+    b->processor_func = proc_lpf;
+    n->io = b;
+    n->h = 0;
+    n->h2 = 0;
+    n->h3 = 0;
+    n->a = (1<<12) - 1;
+    return b;
+}
+void proc_lpf(void* l){
+  auto p = (lpf_t*)l;
+  p->h = p->h + ((p->a * (p->io->in - p->h))>>12);
+  p->h2 = p->h2 + ((p->a * (p->h - p->h2))>>12);
+  p->h3 = p->h3 + ((p->a * (p->h2 - p->h3))>>12);
+  p->io->out = p->h3;
+}
+void set_lpf_freq(lpf_t* l, uint32_t f_norm, uint32_t srate){
+  l->a = (f_norm<<12) / srate;
+}

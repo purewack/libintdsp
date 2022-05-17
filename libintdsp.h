@@ -2,7 +2,11 @@
 #include "private/config.h"
 #include "private/private.h"
 
-struct node_t;
+typedef struct node_t node_t;
+typedef struct wire_t wire_t;
+typedef struct agraph_t agraph_t;
+typedef struct dac_t dac_t;
+
 struct node_t{
     node_t* deps[6];
     int deps_count;
@@ -21,11 +25,11 @@ struct wire_t{
 };
 
 struct agraph_t{
-    node_t** nodes = nullptr;
-    int nodes_count = 0;
+    node_t** nodes;
+    int nodes_count;
     
-    wire_t* wires = nullptr;
-    int wires_count = 0;
+    wire_t* wires;
+    int wires_count;
     
     bool stale;
 };

@@ -1,6 +1,8 @@
 #pragma once
 #include "libintdsp.h"
 
+typedef struct adr_t adr_t;
+
 struct adr_t{
   node_t* io;
   int32_t a_v, r_v, a;

@@ -1,5 +1,7 @@
 #pragma once
 
+typedef int16_t spl_t;
+
 #ifndef DEBUG
     #define LOGL(X) 
     #define LOGNL(X)
@@ -20,16 +22,8 @@
     #define SPL_BITS_PROC 32
 #endif
 
-#ifdef SPL_TYPE
-    typedef SPL_TYPE spl_t;
-#else
-    typedef int16_t spl_t;
-#endif
-
 #ifndef LUT_COUNT 
     #define LUT_COUNT 256
 #endif
 
-#ifndef SIN_FUNC
-    #define SIN_FUNC(X) sin(X)
-#endif
+#define SIN_FUNC(X) 

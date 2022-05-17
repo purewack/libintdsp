@@ -1,6 +1,8 @@
 #pragma once
 #include "libintdsp.h"
 
+typedef struct osc_t osc_t;
+
 struct osc_t{
   node_t* io;
   uint16_t phi;

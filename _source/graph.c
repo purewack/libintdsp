@@ -1,58 +1,15 @@
-#include "../libintdsp.h"
-#include "private.h"
-
-spl_t sint[LUT_COUNT];
-spl_t sawt[LUT_COUNT];
-
-void libintdsp_init(agraph_t* gg){
-    LOGL("libintdsp->init(): init graph and lookup tables");
-    gg->nodes_count = 0;
-    gg->wires_count = 0;
-    gg->stale = false;
-
-    float r = float(1<<(SPL_BITS-1))-1;
-    for(int i=0; i<LUT_COUNT; i++){
-        sawt[i] = spl_t(r * float(i)/float(LUT_COUNT));
-        sint[i] = spl_t(r * SIN_FUNC(2.0f * 3.1415f * float(i)/float(LUT_COUNT)));
-    }
-}
-
-node_t* new_node(agraph_t* gg, char* sig){
-    node_t* n = (node_t*)malloc(sizeof(node_t));
-    n->deps_count = 0;
-    n->sig = sig;
-    if(gg->nodes_count)
-        gg->nodes = (node_t**)realloc(gg->nodes, sizeof(node_t*) * (gg->nodes_count+1));
-    else
-        gg->nodes = (node_t**)malloc(sizeof(node_t*) * 1);
-        
-    gg->nodes[gg->nodes_count] = n;
-    gg->nodes_count++;
-    
-    gg->stale = 1;
-    
-    return n;
-}
-
-void del_node(agraph_t* gg, node_t* n){
-    LOGL("del_node():");
-    LOGL(n->sig);
-    for(int i=0; i<gg->wires_count; i++){
-        int dis = 0;
-        if(gg->wires[i].src == n) dis = 1;
-        if(gg->wires[i].dst == n) dis = 1;
-    }
-}
+#include "libintdsp.h"
+#include <stdlib.h>
 
 int connect(agraph_t* gg, node_t* src, node_t* dst){
     
-    bool dupe = 0;
+    uint8_t dupe = 0;
     int wc = gg->wires_count;
     for(int i=0; i < wc; i++){
         if(gg->wires[i].src == src){
             for(int j=0; j < wc; j++){
                 if(gg->wires[i].dst == dst){
-                    dupe = true;
+                    dupe = 1;
                     break;
                 }
             }   
@@ -128,7 +85,7 @@ void recalc_graph(agraph_t* gg){
     //sort it out lol
     while(sorted_count != gg->nodes_count){
         
-        node_t* remain[gg->nodes_count];
+        node_t* remain[64];
         int remain_count = 0;
         
         //get remaining nodes
@@ -207,40 +164,19 @@ void proc_graph(agraph_t* gg){
     if(gg->stale) recalc_graph(gg);
 
     for(int i=0; i < gg->nodes_count; i++){
-        node_t* n = gg->nodes[i];
+        node_t* n = gg->nodes[i];	
         n->in = 0;
-        
-        
-        //Serial.println(">>> processing node %p (%s)->[%d] \n",n,n->sig,n->deps_count);
         
         if(n->deps_count){
             for(int j=0; j < n->deps_count; j++){
                 node_t* d = n->deps[j];
+				if(n && d)
                 n->in += d->out;
-                //Serial.println("\t using -> %p (%s) = %d\n",d,d->sig,d->out);
             }
         }
         
-        //Serial.println(">>> proc %p \n",n->processor);
-        n->processor_func(n->processor);
-        //Serial.println("\tres[%d]",n->out);
-        //Serial.println("\tin=%d, out=%d \n",n->in,n->out);
+		n->processor_func((void*)n->processor);
         
     }
 }
 
-
-void proc_dac(void* v){
-    dac_t* d = (dac_t*)v;
-    *(d->out_spl) = d->io->in;
-}
-node_t* new_dac(agraph_t* gg, char* sig, int16_t* out_spl){
-    node_t* b = new_node(gg,sig);
-    dac_t* n = (dac_t*)malloc(sizeof(dac_t));
-    LOGL("new node: created");
-    b->processor = n;
-    b->processor_func = proc_dac;
-    n->io = b;
-    n->out_spl = out_spl;
-    return b;
-}

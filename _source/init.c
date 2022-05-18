@@ -1,4 +1,4 @@
-#include "libintdsp.h"
+#include "../libintdsp.h"
 
 spl_t sint[LUT_COUNT];
 spl_t sawt[LUT_COUNT];

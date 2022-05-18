@@ -1,4 +1,4 @@
-#include "libintdsp.h"
+#include "../libintdsp.h"
 #include <stdlib.h>
 
 int connect(agraph_t* gg, node_t* src, node_t* dst){

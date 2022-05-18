@@ -1,4 +1,4 @@
-#include "libintdsp.h"
+#include "../libintdsp.h"
 #include <stdlib.h>
 
 node_t* new_node(agraph_t* gg, char* sig){

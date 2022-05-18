@@ -1,8 +1,8 @@
 #pragma once
-#include "types.h"
-#include "tables.h"
-#include "dsp.h"
-#include "lifecycle.h"
+#include "_source/types.h"
+#include "_source/tables.h"
+#include "_source/dsp.h"
+#include "_source/lifecycle.h"
 
 //sin function phase FS: -2^15 -> 2^15
 void libintdsp_init(agraph_t* gg,  int16_t(*sin_fn)(int16_t phase));

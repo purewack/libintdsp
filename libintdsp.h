@@ -3,6 +3,7 @@
 #include "_source/tables.h"
 #include "_source/dsp.h"
 #include "_source/lifecycle.h"
+#include "_source/util.h"
 
 //sin function phase FS: -2^15 -> 2^15
 void libintdsp_init(agraph_t* gg,  int16_t(*sin_fn)(int16_t phase));

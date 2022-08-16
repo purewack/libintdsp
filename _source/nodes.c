@@ -80,8 +80,8 @@ void proc_osc(void* v){
   s_l = oo->table[phi_l];
   s_h = oo->table[phi_h];
   
-  intp = ( (s_h-s_l)*phi_dt ) >> 8;
-  oo->io->out = oo->bias + (((s_l + intp)*oo->gain)>>8);
+  intp = lin_interp32(s_l,s_h,phi_dt,8);
+  oo->io->out = oo->bias + (((intp)*oo->gain)>>8);
 
   if(oo->io->deps_count)
     oo->phi += oo->io->in;

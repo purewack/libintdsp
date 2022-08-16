@@ -122,8 +122,7 @@ void proc_adr(void* ad){
   //if(aa->aa == 0) return;
   
   aa->vv += aa->a;
-  if(aa->vv > 1<<20) aa->vv = (1<<20) - 1;
-  if(aa->vv < 0) aa->vv = 0;
+  clamp32(&aa->vv,0,(1<<20));
   aa->v = aa->vv >> 8;
   aa->io->out = (aa->io->in*aa->v)>>12; 
 }
